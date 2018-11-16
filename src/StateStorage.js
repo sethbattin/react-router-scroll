@@ -1,6 +1,36 @@
-import { readState, saveState } from 'history/lib/DOMStateStorage';
-
 const STATE_KEY_PREFIX = '@@scroll|';
+
+let storage;
+
+try {
+  if (typeof window === "undefined" || !window.sessionStorage) {
+    throw "no sessionStorage";
+  }
+  storage = window.sessionStorage;
+}
+catch (e) {
+  storage = {
+    getItem: () => null,
+    setItem: () => null,
+    removeItem: () => null
+  };
+}
+
+const readState = (key) => {
+  try {
+    return storage.getItem(key);
+  } catch (e) {
+    return null;
+  }
+  return null;
+}
+
+const saveState = (key, value) => {
+  try {
+    storage.setItem(key, value);
+  } catch (e) {
+  }
+}
 
 export default class StateStorage {
   constructor(router) {
